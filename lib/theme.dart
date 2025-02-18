@@ -1,95 +1,79 @@
 import 'package:flutter/material.dart';
 
-class TappskTheme {
-  static ThemeData get theme {
-    // Определяем базовую цветовую схему
-    final ColorScheme colorScheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFF1A73E8),
-      brightness: Brightness.light,
-      primary: const Color(0xFF1A73E8),
-      secondary: const Color(0xFFFFC107),
-      background: const Color(0xFFF5F5F5),
-    );
+ThemeData buildAppTheme() {
+  // Задаём основные цвета согласно вашему списку
+  const Color primaryColor = Color(0xFF00A7F9); // #00a7f9
+  const Color primaryContainer = Color(0xFF3ED5FF); // #3ed5ff
+  const Color secondaryColor = Color(0xFFFF9E01); // #ff9e01
+  const Color secondaryContainer = Color(0xFFBBBBCa); // #bbbbca
+  const Color tertiaryColor = Color(0xFF05C8A5); // #05c8a5
+  const Color tertiaryContainer = Color(0xFF00C8A5); // #00c8a5
+  const Color errorColor = Color(0xFFFF322C); // #ff322c
+  const Color backgroundColor = Color(0xFFFFFFFF); // #ffffff
+  const Color surfaceColor = Color(0xFFFFFFFF); // #ffffff
+  const Color textColor = Color(0xFF040404); // #040404
+  const Color outlineColor = Color(0xFFBBBBCa); // #bbbbca
 
-    // Определяем текстовую тему с использованием RobotoRegular
-    final TextTheme textTheme = TextTheme(
-      displayLarge: const TextStyle(
-        fontFamily: 'RobotoRegular',
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-        color: Colors.black87,
-      ),
-      headlineLarge: const TextStyle(
-        fontFamily: 'RobotoRegular',
-        fontSize: 24,
-        fontWeight: FontWeight.w600,
-        color: Colors.black87,
-      ),
-      bodyLarge: const TextStyle(
-        fontFamily: 'RobotoRegular',
-        fontSize: 16,
-        fontWeight: FontWeight.normal,
-        color: Colors.black87,
-      ),
-      bodyMedium: const TextStyle(
-        fontFamily: 'RobotoRegular',
-        fontSize: 14,
-        fontWeight: FontWeight.normal,
-        color: Colors.black54,
-      ),
-      labelLarge: const TextStyle(
-        fontFamily: 'RobotoRegular',
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-        color: Colors.white,
-      ),
-    );
+  // Создаём схему цветов (M3)
+  const ColorScheme colorScheme = ColorScheme(
+    brightness: Brightness.light,
 
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.background,
-      fontFamily: 'RobotoRegular',
-      textTheme: textTheme,
-      appBarTheme: AppBarTheme(
+    // Основные тона
+    primary: primaryColor,
+    onPrimary: backgroundColor,
+    secondary: secondaryColor,
+    onSecondary: backgroundColor,
+    tertiary: tertiaryColor,
+    onTertiary: backgroundColor,
+
+    // Ошибки
+    error: errorColor,
+    onError: backgroundColor,
+    surface: surfaceColor,
+    onSurface: textColor,
+
+    // Дополнительные поля для M3
+    primaryContainer: primaryContainer,
+    onPrimaryContainer: textColor,
+    secondaryContainer: secondaryContainer,
+    onSecondaryContainer: textColor,
+    tertiaryContainer: tertiaryContainer,
+    onTertiaryContainer: backgroundColor,
+
+    // Можно использовать в качестве оттенка для карточек/контейнеров
+    surfaceContainerHighest: secondaryContainer,
+    onSurfaceVariant: textColor,
+
+    // Для обводок, разделителей и т.п.
+    outline: outlineColor,
+  );
+
+  return ThemeData(
+    useMaterial3: true, // Включаем Material Design 3
+    colorScheme: colorScheme,
+    scaffoldBackgroundColor: colorScheme.surface,
+
+    // Пример настройки AppBar
+    appBarTheme: AppBarTheme(
+      backgroundColor: colorScheme.surface,
+      foregroundColor: colorScheme.onSurface,
+      elevation: 0,
+      centerTitle: true,
+    ),
+
+    // Пример настройки текста (можно заменить на свои шрифты и стили)
+    textTheme: Typography.blackMountainView.apply(
+      bodyColor: textColor,
+      displayColor: textColor,
+    ),
+
+    // Дополнительно можно настраивать ElevatedButton, TextButton и т.д.
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
-        centerTitle: true,
-        elevation: 0,
-        titleTextStyle: textTheme.headlineLarge?.copyWith(color: Colors.white),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: colorScheme.primary,
-          foregroundColor: colorScheme.onPrimary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          textStyle: const TextStyle(
-            fontFamily: 'RobotoRegular',
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
-      ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: colorScheme.background,
-        selectedItemColor: colorScheme.primary,
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      ),
-    );
-  }
+    ),
+  );
 }

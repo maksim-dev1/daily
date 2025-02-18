@@ -1,5 +1,6 @@
 import 'package:daily/feature/presentation/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -8,16 +9,20 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              icon: SvgPicture.asset('assets/menu.svg'),
+            );
           },
-          icon: Icon(Icons.menu_sharp),
         ),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.calendar_month_rounded),
+            icon: SvgPicture.asset('assets/calendar.svg'),
           ),
         ],
       ),
