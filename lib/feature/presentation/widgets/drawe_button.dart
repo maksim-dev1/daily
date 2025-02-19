@@ -15,13 +15,29 @@ class DraweButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ButtonStyle(
-        shadowColor: WidgetStatePropertyAll(Colors.transparent),
-      ),
-      child: Row(
-        children: [SvgPicture.asset(icon), SizedBox(width: 20), Text(title)],
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+          shadowColor: WidgetStatePropertyAll(Colors.transparent),
+          overlayColor: WidgetStatePropertyAll(
+            Theme.of(context).colorScheme.primary.withAlpha(30),
+          ),
+          shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        ),
+
+        child: Row(
+          children: [
+            SvgPicture.asset(icon),
+            SizedBox(width: 20),
+            Text(title, style: Theme.of(context).textTheme.titleMedium),
+          ],
+        ),
       ),
     );
   }

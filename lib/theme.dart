@@ -1,79 +1,82 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-ThemeData buildAppTheme() {
-  // Задаём основные цвета согласно вашему списку
-  const Color primaryColor = Color(0xFF00A7F9); // #00a7f9
-  const Color primaryContainer = Color(0xFF3ED5FF); // #3ed5ff
-  const Color secondaryColor = Color(0xFFFF9E01); // #ff9e01
-  const Color secondaryContainer = Color(0xFFBBBBCa); // #bbbbca
-  const Color tertiaryColor = Color(0xFF05C8A5); // #05c8a5
-  const Color tertiaryContainer = Color(0xFF00C8A5); // #00c8a5
-  const Color errorColor = Color(0xFFFF322C); // #ff322c
-  const Color backgroundColor = Color(0xFFFFFFFF); // #ffffff
-  const Color surfaceColor = Color(0xFFFFFFFF); // #ffffff
-  const Color textColor = Color(0xFF040404); // #040404
-  const Color outlineColor = Color(0xFFBBBBCa); // #bbbbca
+const _primary = Color(0xFF007BFF); 
+const _primaryContainer = Color(0xFF0062CC); 
+const _secondary = Color(0xFF6C757D);
+const _secondaryContainer = Color(
+  0xFF5A6268,
+); 
+const _tertiary = Color(0xFF28A745); // #28a745
+const _tertiaryContainer = Color(
+  0xFF218838,
+); 
+const _error = Color(0xFFDC3545);
+const _background = Color(0xFFFFFFFF); 
+const _surface = Color(0xFFF8F9FA); 
+const _text = Color(0xFF343A40); 
+const _outline = Color(0xFFB0B0B0);
 
-  // Создаём схему цветов (M3)
-  const ColorScheme colorScheme = ColorScheme(
-    brightness: Brightness.light,
+const borderRadius = BorderRadius.all(Radius.circular(12));
 
-    // Основные тона
-    primary: primaryColor,
-    onPrimary: backgroundColor,
-    secondary: secondaryColor,
-    onSecondary: backgroundColor,
-    tertiary: tertiaryColor,
-    onTertiary: backgroundColor,
-
-    // Ошибки
-    error: errorColor,
-    onError: backgroundColor,
-    surface: surfaceColor,
-    onSurface: textColor,
-
-    // Дополнительные поля для M3
-    primaryContainer: primaryContainer,
-    onPrimaryContainer: textColor,
-    secondaryContainer: secondaryContainer,
-    onSecondaryContainer: textColor,
-    tertiaryContainer: tertiaryContainer,
-    onTertiaryContainer: backgroundColor,
-
-    // Можно использовать в качестве оттенка для карточек/контейнеров
-    surfaceContainerHighest: secondaryContainer,
-    onSurfaceVariant: textColor,
-
-    // Для обводок, разделителей и т.п.
-    outline: outlineColor,
-  );
-
-  return ThemeData(
-    useMaterial3: true, // Включаем Material Design 3
-    colorScheme: colorScheme,
-    scaffoldBackgroundColor: colorScheme.surface,
-
-    // Пример настройки AppBar
-    appBarTheme: AppBarTheme(
-      backgroundColor: colorScheme.surface,
-      foregroundColor: colorScheme.onSurface,
-      elevation: 0,
-      centerTitle: true,
+final appThemeDataLight = ThemeData(
+  scaffoldBackgroundColor: _surface,
+  fontFamily: GoogleFonts.roboto().fontFamily,
+  useMaterial3: true,
+  colorScheme: ColorScheme.light(
+    primary: _primary,
+    onPrimary: _background,
+    secondary: _secondary,
+    onSecondary: _background,
+    tertiary: _tertiary,
+    onTertiary: _background,
+    error: _error,
+    onError: _background,
+    surface: _surface,
+    onSurface: _text,
+    primaryContainer: _primaryContainer,
+    onPrimaryContainer: _text,
+    secondaryContainer: _secondaryContainer,
+    onSecondaryContainer: _text,
+    tertiaryContainer: _tertiaryContainer,
+    onTertiaryContainer: _background,
+    surfaceContainerHighest: _secondaryContainer,
+    onSurfaceVariant: _text,
+    outline: _outline,
+  ),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: _surface,
+    foregroundColor: _text,
+    elevation: 0,
+    centerTitle: true,
+  ),
+  textTheme: Typography.blackMountainView.apply(
+    bodyColor: _text,
+    displayColor: _text,
+  ),
+  inputDecorationTheme: const InputDecorationTheme(
+    border: OutlineInputBorder(
+      borderRadius: borderRadius,
+      borderSide: BorderSide(width: 2),
     ),
-
-    // Пример настройки текста (можно заменить на свои шрифты и стили)
-    textTheme: Typography.blackMountainView.apply(
-      bodyColor: textColor,
-      displayColor: textColor,
+  ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(
+      foregroundColor: _text,
+      side: const BorderSide(width: 1, color: _text),
+      shape: const RoundedRectangleBorder(borderRadius: borderRadius),
     ),
-
-    // Дополнительно можно настраивать ElevatedButton, TextButton и т.д.
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
+  ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      shape: const RoundedRectangleBorder(borderRadius: borderRadius),
     ),
-  );
-}
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: _primary,
+      foregroundColor: _background,
+      shape: const RoundedRectangleBorder(borderRadius: borderRadius),
+    ),
+  ),
+);
