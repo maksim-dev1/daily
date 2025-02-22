@@ -1,7 +1,7 @@
-import 'package:daily/feature/presentation/screens/home_screen.dart';
-import 'package:daily/feature/presentation/screens/task_diary_screen.dart';
-import 'package:daily/feature/presentation/widgets/custom_bottom_sheet.dart';
-import 'package:daily/feature/presentation/widgets/drawe_button.dart';
+import 'package:daily/1/presentation/screens/home_screen.dart';
+import 'package:daily/1/presentation/screens/task_diary_screen.dart';
+import 'package:daily/1/presentation/widgets/custom_bottom_sheet.dart';
+import 'package:daily/1/presentation/widgets/drawe_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

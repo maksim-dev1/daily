@@ -1,4 +1,4 @@
-import 'package:daily/feature/presentation/screens/home_screen.dart';
+import 'package:daily/1/presentation/screens/home_screen.dart';
 import 'package:daily/theme.dart';
 import 'package:flutter/material.dart';
 
