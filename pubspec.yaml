@@ -42,6 +42,7 @@ dependencies:
   google_fonts: ^6.2.1
   flutter_svg: ^2.0.17
   octopus: ^0.0.9
+  flutter_bloc: ^9.0.0
 
 dev_dependencies:
   flutter_test:

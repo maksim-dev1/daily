@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:daily/feature/data/db/models/models_db.dart';
+import 'package:daily/common/data/db/models/models_db.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
