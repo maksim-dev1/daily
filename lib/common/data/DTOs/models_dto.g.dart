@@ -43,29 +43,6 @@ Map<String, dynamic> _$$TaskDTOImplToJson(_$TaskDTOImpl instance) =>
       'updatedAt': instance.updatedAt?.toIso8601String(),
     };
 
-_$CategoryDTOImpl _$$CategoryDTOImplFromJson(Map<String, dynamic> json) =>
-    _$CategoryDTOImpl(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      color: (json['color'] as num).toInt(),
-      showOnMainScreen: json['showOnMainScreen'] as bool,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt:
-          json['updatedAt'] == null
-              ? null
-              : DateTime.parse(json['updatedAt'] as String),
-    );
-
-Map<String, dynamic> _$$CategoryDTOImplToJson(_$CategoryDTOImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'title': instance.title,
-      'color': instance.color,
-      'showOnMainScreen': instance.showOnMainScreen,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
-    };
-
 _$SubtaskDTOImpl _$$SubtaskDTOImplFromJson(Map<String, dynamic> json) =>
     _$SubtaskDTOImpl(
       id: json['id'] as String,

@@ -1,5 +1,8 @@
 import 'package:daily/common/consts/colors.dart';
+import 'package:daily/feature/categories/bloc/category_bloc.dart';
+import 'package:daily/feature/categories/domain/entities/category_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CustomBottomSheet extends StatefulWidget {
@@ -10,48 +13,141 @@ class CustomBottomSheet extends StatefulWidget {
 }
 
 class _CustomBottomSheetState extends State<CustomBottomSheet> {
-  bool swither = false;
+  bool showOnMainScreen = false;
   Color selectedColor = colors[0];
-
+  final TextEditingController categoryNameController = TextEditingController();
   late FocusNode _focusNode;
+
+  // Флаг, указывающий, что действие (нажатие кнопки) уже совершено.
+  bool _submitted = false;
+
+  // Захватываем bloc в initState, чтобы потом можно было его использовать в dispose.
+  late final CategoryBloc _categoryBloc;
 
   @override
   void initState() {
     super.initState();
+    _categoryBloc = context.read<CategoryBloc>();
     _focusNode = FocusNode();
-
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
-        Future.delayed(const Duration(milliseconds: 0), () {
-          if (mounted && !_focusNode.hasFocus) {
-            FocusScope.of(context).requestFocus(_focusNode);
-          }
-        });
-      }
-    });
+    // При необходимости можно добавить дополнительную логику фокусировки.
   }
 
   @override
   void dispose() {
+    // Если окно закрывается без нажатия на кнопку (например, свайпом), вызываем ивент загрузки.
+    if (!_submitted) {
+      _categoryBloc.add(const CategoryEvent.loadCategories());
+    }
     _focusNode.dispose();
+    categoryNameController.dispose();
     super.dispose();
   }
 
   Future<bool> _onPopInvoked() async {
-    if (!mounted) return true;
-
     if (MediaQuery.of(context).viewInsets.bottom != 0) {
       FocusScope.of(context).requestFocus(_focusNode);
       return false;
     }
-
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<CategoryBloc, CategoryState>(
+      builder: (context, state) {
+        VoidCallback onSubmit;
+        if (state is LoadedCategory) {
+          // Инициализируем данные для редактирования
+          showOnMainScreen = state.category.showOnMainScreen;
+          selectedColor = colors[state.category.color];
+          categoryNameController.text = state.category.title;
+          onSubmit = () {
+            _submitted = true; // Отмечаем, что действие совершено
+            _categoryBloc.add(
+              CategoryEvent.updateCategory(
+                category: CategoryEntity(
+                  id: state.category.id,
+                  title: categoryNameController.text,
+                  color: colors.indexOf(selectedColor),
+                  showOnMainScreen: showOnMainScreen,
+                  createdAt: state.category.createdAt,
+                  updatedAt: null,
+                ),
+              ),
+            );
+            Navigator.pop(context);
+          };
+        } else if (state is LoadedCategories) {
+          onSubmit = () {
+            _submitted = true; // Отмечаем, что действие совершено
+            _categoryBloc.add(
+              CategoryEvent.addCategory(
+                category: CategoryEntity(
+                  id: null,
+                  title: categoryNameController.text,
+                  color: colors.indexOf(selectedColor),
+                  showOnMainScreen: showOnMainScreen,
+                  createdAt: null,
+                  updatedAt: null,
+                ),
+              ),
+            );
+            Navigator.pop(context);
+          };
+        } else {
+          return const SizedBox();
+        }
+
+        return BottomSheetContent(
+          selectedColor: selectedColor,
+          categoryNameController: categoryNameController,
+          focusNode: _focusNode,
+          showOnMainScreen: showOnMainScreen,
+          onSwitchChanged: (value) {
+            setState(() {
+              showOnMainScreen = value;
+            });
+          },
+          onSubmit: onSubmit,
+          onColorSelected: (color) {
+            setState(() {
+              selectedColor = color;
+            });
+          },
+          onPopInvoked: _onPopInvoked,
+        );
+      },
+    );
+  }
+}
+
+// Виджет для отображения содержимого BottomSheet
+class BottomSheetContent extends StatelessWidget {
+  final Color selectedColor;
+  final TextEditingController categoryNameController;
+  final FocusNode focusNode;
+  final bool showOnMainScreen;
+  final ValueChanged<bool> onSwitchChanged;
+  final VoidCallback onSubmit;
+  final ValueChanged<Color> onColorSelected;
+  final Future<bool> Function() onPopInvoked;
+
+  const BottomSheetContent({
+    super.key,
+    required this.selectedColor,
+    required this.categoryNameController,
+    required this.focusNode,
+    required this.showOnMainScreen,
+    required this.onSwitchChanged,
+    required this.onSubmit,
+    required this.onColorSelected,
+    required this.onPopInvoked,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return PopScope(
-      onPopInvokedWithResult: (didPop, result) => _onPopInvoked(),
+      onPopInvokedWithResult: (didPop, result) => onPopInvoked(),
       child: Padding(
         padding: const EdgeInsets.only(top: 100),
         child: SizedBox(
@@ -63,9 +159,9 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
             ),
             child: Column(
               children: [
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 SvgPicture.asset('assets/pull.svg'),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -82,10 +178,11 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: TextFormField(
-                              focusNode: _focusNode,
+                              focusNode: focusNode,
+                              controller: categoryNameController,
                               autofocus: true,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -116,9 +213,9 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                               color: Theme.of(context).colorScheme.outline,
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Switch(
-                            value: swither,
+                            value: showOnMainScreen,
                             inactiveTrackColor: Theme.of(
                               context,
                             ).colorScheme.outline.withAlpha(100),
@@ -127,11 +224,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                             trackOutlineColor: WidgetStatePropertyAll(
                               Colors.transparent,
                             ),
-                            onChanged: (value) {
-                              setState(() {
-                                swither = value;
-                              });
-                            },
+                            onChanged: onSwitchChanged,
                           ),
                         ],
                       ),
@@ -142,7 +235,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                     ],
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -153,30 +246,27 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                     child: SizedBox(
                       width: 80,
                       height: 28,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(),
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                            padding: WidgetStatePropertyAll(EdgeInsets.zero),
-                            visualDensity: VisualDensity.compact,
-                            backgroundColor: WidgetStatePropertyAll(
-                              Theme.of(context).colorScheme.inversePrimary,
-                            ),
-                            shape: WidgetStatePropertyAll(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          padding: WidgetStatePropertyAll(EdgeInsets.zero),
+                          visualDensity: VisualDensity.compact,
+                          backgroundColor: WidgetStatePropertyAll(
+                            Theme.of(context).colorScheme.inversePrimary,
+                          ),
+                          shape: WidgetStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          onPressed: () {},
-                          child: Text(
-                            'Готово',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
+                        ),
+                        onPressed: onSubmit,
+                        child: Text(
+                          'Готово',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                       ),
@@ -199,11 +289,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         return InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectedColor = colors[index];
-                            });
-                          },
+                          onTap: () => onColorSelected(colors[index]),
                           child: SizedBox(
                             width: 38,
                             height: 38,
@@ -211,7 +297,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border:
-                                    colors[index] == selectedColor
+                                    selectedColor == colors[index]
                                         ? Border.all(
                                           color: colors[index],
                                           width: 3,
@@ -220,12 +306,10 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(5),
-                                child: SizedBox(
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: colors[index],
-                                    ),
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: colors[index],
                                   ),
                                 ),
                               ),
@@ -233,9 +317,8 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                           ),
                         );
                       },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(width: 6);
-                      },
+                      separatorBuilder:
+                          (context, index) => const SizedBox(width: 6),
                       itemCount: colors.length,
                     ),
                   ),

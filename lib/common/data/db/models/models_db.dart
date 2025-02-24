@@ -35,7 +35,10 @@ class Categories extends Table {
       boolean()(); // Показывать ли на главной экране
   DateTimeColumn get createdAt =>
       dateTime().clientDefault(() => DateTime.now())();
-  DateTimeColumn get updatedAt => dateTime().nullable()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+    @override
+  Set<Column> get primaryKey => {id};
 }
 
 // Таблица для подзадач

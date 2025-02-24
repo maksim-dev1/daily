@@ -35,7 +35,7 @@ class SubtaskRepository implements ISubtaskRepository {
   @override
   Future<SubtaskDTO> addSubtask(SubtaskDTO subtask) async {
     // Вставляем новую подзадачу в базу данных.
-    await _db.insertSubtask(_toCompanion(subtask));
+    await _db.insertSubtask(subtask: _toCompanion(subtask));
     return subtask;
   }
 
@@ -43,7 +43,7 @@ class SubtaskRepository implements ISubtaskRepository {
   Future<SubtaskDTO> updateSubtask(SubtaskDTO subtask) async {
     // Обновляем существующую подзадачу.
     await _db.updateSubtask(
-      Subtask(
+      subtask: Subtask(
         id: subtask.id,
         taskId: subtask.taskId,
         title: subtask.title,
@@ -61,13 +61,13 @@ class SubtaskRepository implements ISubtaskRepository {
     final subtask =
         await (_db.select(_db.subtasks)
           ..where((s) => s.id.equals(subtaskId))).getSingle();
-    await _db.deleteSubtask(subtask);
+    await _db.deleteSubtask(subtask: subtask);
   }
 
   @override
   Future<List<SubtaskDTO>> fetchSubtasksForTask(String taskId) async {
     // Получаем список подзадач для конкретной задачи.
-    final list = await _db.getSubtasksForTask(taskId);
+    final list = await _db.getSubtasksForTask(taskId: taskId);
     return list.map(_fromData).toList();
   }
 }

@@ -43,7 +43,7 @@ class TaskRepository implements ITaskRepository {
   @override
   Future<TaskDTO> addTask(TaskDTO task) async {
     // Вставляем новую задачу в базу данных.
-    await _db.insertTask(_toCompanion(task));
+    await _db.insertTask(task: _toCompanion(task));
     return task;
   }
 
@@ -51,7 +51,7 @@ class TaskRepository implements ITaskRepository {
   Future<TaskDTO> updateTask(TaskDTO task) async {
     // Обновляем существующую задачу, передавая объект drift-модели.
     await _db.updateTask(
-      Task(
+      task: Task(
         id: task.id,
         title: task.title,
         description: task.description,
@@ -73,7 +73,7 @@ class TaskRepository implements ITaskRepository {
     final task =
         await (_db.select(_db.tasks)
           ..where((t) => t.id.equals(taskId))).getSingle();
-    await _db.deleteTask(task);
+    await _db.deleteTask(task: task);
   }
 
   @override
@@ -89,7 +89,7 @@ class TaskRepository implements ITaskRepository {
     DateTime end,
   ) async {
     // Получаем задачи, попадающие в указанный диапазон дат.
-    final list = await _db.getTasksForDateRange(start, end);
+    final list = await _db.getTasksForDateRange(start: start, end: end);
     return list.map(_fromData).toList();
   }
 
@@ -124,7 +124,7 @@ class TaskRepository implements ITaskRepository {
   @override
   Future<void> markTaskCompleted(String taskId) async {
     // Помечаем задачу как выполненную (изменяем статус на 1).
-    await _db.markTaskCompleted(taskId);
+    await _db.markTaskCompleted(taskId: taskId);
   }
 
   @override

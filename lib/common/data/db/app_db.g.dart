@@ -74,9 +74,9 @@ class $CategoriesTable extends Categories
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
     'updated_at',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -140,12 +140,14 @@ class $CategoriesTable extends Categories
         _updatedAtMeta,
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Category map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -175,10 +177,11 @@ class $CategoriesTable extends Categories
             DriftSqlType.dateTime,
             data['${effectivePrefix}created_at'],
           )!,
-      updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}updated_at'],
-      ),
+      updatedAt:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}updated_at'],
+          )!,
     );
   }
 
@@ -194,14 +197,14 @@ class Category extends DataClass implements Insertable<Category> {
   final int color;
   final bool showOnMainScreen;
   final DateTime createdAt;
-  final DateTime? updatedAt;
+  final DateTime updatedAt;
   const Category({
     required this.id,
     required this.title,
     required this.color,
     required this.showOnMainScreen,
     required this.createdAt,
-    this.updatedAt,
+    required this.updatedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -211,9 +214,7 @@ class Category extends DataClass implements Insertable<Category> {
     map['color'] = Variable<int>(color);
     map['show_on_main_screen'] = Variable<bool>(showOnMainScreen);
     map['created_at'] = Variable<DateTime>(createdAt);
-    if (!nullToAbsent || updatedAt != null) {
-      map['updated_at'] = Variable<DateTime>(updatedAt);
-    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -224,10 +225,7 @@ class Category extends DataClass implements Insertable<Category> {
       color: Value(color),
       showOnMainScreen: Value(showOnMainScreen),
       createdAt: Value(createdAt),
-      updatedAt:
-          updatedAt == null && nullToAbsent
-              ? const Value.absent()
-              : Value(updatedAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -242,7 +240,7 @@ class Category extends DataClass implements Insertable<Category> {
       color: serializer.fromJson<int>(json['color']),
       showOnMainScreen: serializer.fromJson<bool>(json['showOnMainScreen']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -254,7 +252,7 @@ class Category extends DataClass implements Insertable<Category> {
       'color': serializer.toJson<int>(color),
       'showOnMainScreen': serializer.toJson<bool>(showOnMainScreen),
       'createdAt': serializer.toJson<DateTime>(createdAt),
-      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
@@ -264,14 +262,14 @@ class Category extends DataClass implements Insertable<Category> {
     int? color,
     bool? showOnMainScreen,
     DateTime? createdAt,
-    Value<DateTime?> updatedAt = const Value.absent(),
+    DateTime? updatedAt,
   }) => Category(
     id: id ?? this.id,
     title: title ?? this.title,
     color: color ?? this.color,
     showOnMainScreen: showOnMainScreen ?? this.showOnMainScreen,
     createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
   Category copyWithCompanion(CategoriesCompanion data) {
     return Category(
@@ -321,7 +319,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
   final Value<int> color;
   final Value<bool> showOnMainScreen;
   final Value<DateTime> createdAt;
-  final Value<DateTime?> updatedAt;
+  final Value<DateTime> updatedAt;
   final Value<int> rowid;
   const CategoriesCompanion({
     this.id = const Value.absent(),
@@ -338,11 +336,12 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     required int color,
     required bool showOnMainScreen,
     this.createdAt = const Value.absent(),
-    this.updatedAt = const Value.absent(),
+    required DateTime updatedAt,
     this.rowid = const Value.absent(),
   }) : title = Value(title),
        color = Value(color),
-       showOnMainScreen = Value(showOnMainScreen);
+       showOnMainScreen = Value(showOnMainScreen),
+       updatedAt = Value(updatedAt);
   static Insertable<Category> custom({
     Expression<String>? id,
     Expression<String>? title,
@@ -369,7 +368,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     Value<int>? color,
     Value<bool>? showOnMainScreen,
     Value<DateTime>? createdAt,
-    Value<DateTime?>? updatedAt,
+    Value<DateTime>? updatedAt,
     Value<int>? rowid,
   }) {
     return CategoriesCompanion(
@@ -2241,7 +2240,7 @@ typedef $$CategoriesTableCreateCompanionBuilder =
       required int color,
       required bool showOnMainScreen,
       Value<DateTime> createdAt,
-      Value<DateTime?> updatedAt,
+      required DateTime updatedAt,
       Value<int> rowid,
     });
 typedef $$CategoriesTableUpdateCompanionBuilder =
@@ -2251,7 +2250,7 @@ typedef $$CategoriesTableUpdateCompanionBuilder =
       Value<int> color,
       Value<bool> showOnMainScreen,
       Value<DateTime> createdAt,
-      Value<DateTime?> updatedAt,
+      Value<DateTime> updatedAt,
       Value<int> rowid,
     });
 
@@ -2543,7 +2542,7 @@ class $$CategoriesTableTableManager
                 Value<int> color = const Value.absent(),
                 Value<bool> showOnMainScreen = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CategoriesCompanion(
                 id: id,
@@ -2561,7 +2560,7 @@ class $$CategoriesTableTableManager
                 required int color,
                 required bool showOnMainScreen,
                 Value<DateTime> createdAt = const Value.absent(),
-                Value<DateTime?> updatedAt = const Value.absent(),
+                required DateTime updatedAt,
                 Value<int> rowid = const Value.absent(),
               }) => CategoriesCompanion.insert(
                 id: id,

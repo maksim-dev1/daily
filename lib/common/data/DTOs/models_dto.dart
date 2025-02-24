@@ -22,20 +22,20 @@ class TaskDTO with _$TaskDTO {
       _$TaskDTOFromJson(json);
 }
 
-@freezed
-class CategoryDTO with _$CategoryDTO {
-  const factory CategoryDTO({
-    required String id,
-    required String title,
-    required int color,
-    required bool showOnMainScreen,
-    required DateTime createdAt,
-    required DateTime? updatedAt,
-  }) = _CategoryDTO;
+// @freezed
+// class CategoryDTO with _$CategoryDTO {
+//   const factory CategoryDTO({
+//     required String id,
+//     required String title,
+//     required int color,
+//     required bool showOnMainScreen,
+//     required DateTime createdAt,
+//     required DateTime? updatedAt,
+//   }) = _CategoryDTO;
 
-  factory CategoryDTO.fromJson(Map<String, dynamic> json) =>
-      _$CategoryDTOFromJson(json);
-}
+//   factory CategoryDTO.fromJson(Map<String, dynamic> json) =>
+//       _$CategoryDTOFromJson(json);
+// }
 
 @freezed
 class SubtaskDTO with _$SubtaskDTO {

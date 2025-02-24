@@ -29,7 +29,9 @@ class RecurringTaskRepository implements IRecurringTaskRepository {
   /// Преобразует объект RecurringTask (drift-модель) в RecurringTaskDTO.
   RecurringTaskDTO _fromData(RecurringTask t) {
     return RecurringTaskDTO(
-      id: int.tryParse(t.id) ?? 0, // Преобразование идентификатора из строки в int
+      id:
+          int.tryParse(t.id) ??
+          0, // Преобразование идентификатора из строки в int
       title: t.title,
       categoryId: t.categoryId != null ? int.tryParse(t.categoryId!) : null,
       recurrenceType: t.recurrenceType,
@@ -47,7 +49,7 @@ class RecurringTaskRepository implements IRecurringTaskRepository {
   @override
   Future<RecurringTaskDTO> addRecurringTask(RecurringTaskDTO task) async {
     // Добавляем новую регулярную задачу в базу данных.
-    await _db.insertRecurringTask(_toCompanion(task));
+    await _db.insertRecurringTask(recurringTask: _toCompanion(task));
     return task;
   }
 
@@ -55,7 +57,7 @@ class RecurringTaskRepository implements IRecurringTaskRepository {
   Future<RecurringTaskDTO> updateRecurringTask(RecurringTaskDTO task) async {
     // Обновляем существующую регулярную задачу.
     await _db.updateRecurringTask(
-      RecurringTask(
+      recurringTask: RecurringTask(
         id: task.id.toString(),
         title: task.title,
         categoryId: task.categoryId?.toString(),
@@ -76,10 +78,10 @@ class RecurringTaskRepository implements IRecurringTaskRepository {
   @override
   Future<void> deleteRecurringTask(String recurringTaskId) async {
     // Получаем регулярную задачу по идентификатору и удаляем её.
-    final task = await (_db.select(_db.recurringTasks)
-      ..where((t) => t.id.equals(recurringTaskId)))
-        .getSingle();
-    await _db.deleteRecurringTask(task);
+    final task =
+        await (_db.select(_db.recurringTasks)
+          ..where((t) => t.id.equals(recurringTaskId))).getSingle();
+    await _db.deleteRecurringTask(recurringTask: task);
   }
 
   @override
@@ -92,14 +94,14 @@ class RecurringTaskRepository implements IRecurringTaskRepository {
   @override
   Future<List<RecurringTaskDTO>> fetchRecurringTasksByType(String type) async {
     // Получаем регулярные задачи по заданному типу повторения.
-    final list = await _db.getRecurringTasksByType(type);
+    final list = await _db.getRecurringTasksByType(type: type);
     return list.map(_fromData).toList();
   }
 
   @override
   Future<List<RecurringTaskDTO>> fetchRecurringTasksDue(DateTime now) async {
     // Получаем регулярные задачи, у которых время выполнения наступило.
-    final list = await _db.getRecurringTasksDue(now);
+    final list = await _db.getRecurringTasksDue(now: now);
     return list.map(_fromData).toList();
   }
 }
