@@ -34,24 +34,37 @@ class TasksScreen extends StatelessWidget {
       ),
       drawer: CustomDrawer(),
       floatingActionButton: CustomExpandableFAB(
+        color: Theme.of(context).colorScheme.primary,
+        icon: SvgPicture.asset('assets/plus_white.svg', width: 40, height: 40),
+
         actions: [
-          FloatingActionButton(
-            heroTag: 'task',
-            onPressed: () {
-              // Добавление задачи
-            },
-            backgroundColor: Colors.green,
-            shape: const CircleBorder(),
-            child: const Icon(Icons.task),
+          SizedBox(
+            width: 50,
+            height: 50,
+            child: FloatingActionButton(
+              heroTag: 'task',
+              onPressed: () {
+                // Добавление задачи
+              },
+              elevation: 0,
+              backgroundColor: Theme.of(context).colorScheme.outline,
+              shape: const CircleBorder(),
+              child: SvgPicture.asset('assets/check.svg'),
+            ),
           ),
-          FloatingActionButton(
-            heroTag: 'category',
-            onPressed: () {
-              // Добавление категории
-            },
-            backgroundColor: Colors.blue,
-            shape: const CircleBorder(),
-            child: const Icon(Icons.category),
+          SizedBox(
+            width: 50,
+            height: 50,
+            child: FloatingActionButton(
+              heroTag: 'category',
+              onPressed: () {
+                // Добавление категории
+              },
+              elevation: 0,
+              backgroundColor: Theme.of(context).colorScheme.outline,
+              shape: const CircleBorder(),
+              child: SvgPicture.asset('assets/refresh.svg'),
+            ),
           ),
         ],
       ),

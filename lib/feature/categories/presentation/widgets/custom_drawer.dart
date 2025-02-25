@@ -65,14 +65,13 @@ class CustomDrawer extends StatelessWidget {
                       });
                     },
 
-                    icon: SvgPicture.asset('assets/plus.svg'),
+                    icon: SvgPicture.asset('assets/plus_grey.svg'),
                   ),
                 ],
               ),
             ),
             BlocBuilder<CategoryBloc, CategoryState>(
               builder: (context, state) {
-                print(state);
                 return state.maybeMap(
                   orElse: () => SizedBox(),
                   loadedCategories: (state) {
