@@ -35,7 +35,6 @@ class _CustomExpandableFABState extends State<CustomExpandableFAB> {
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
-
         // Генерация списка кнопок
         for (int i = 0; i < widget.actions.length; i++)
           AnimatedSlide(

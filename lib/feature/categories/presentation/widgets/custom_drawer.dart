@@ -2,7 +2,7 @@ import 'package:daily/common/consts/colors.dart';
 import 'package:daily/feature/task/presentation/screens/tasks_screen.dart';
 import 'package:daily/1/presentation/screens/task_diary_screen.dart';
 import 'package:daily/feature/categories/bloc/category_bloc.dart';
-import 'package:daily/feature/categories/presentation/widgets/custom_bottom_sheet.dart';
+import 'package:daily/feature/categories/presentation/widgets/categories_bottom_sheet.dart';
 import 'package:daily/feature/categories/presentation/widgets/drawe_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,7 +59,7 @@ class CustomDrawer extends StatelessWidget {
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
-                        builder: (context) => const CustomBottomSheet(),
+                        builder: (context) => const CategoriesBottomSheet(),
                       ).whenComplete(() {
                         categoryBloc.add(const CategoryEvent.loadCategories());
                       });
@@ -97,7 +97,7 @@ class CustomDrawer extends StatelessWidget {
                                         isScrollControlled: true,
                                         backgroundColor: Colors.transparent,
                                         builder: (context) {
-                                          return CustomBottomSheet();
+                                          return CategoriesBottomSheet();
                                         },
                                       );
                                     },

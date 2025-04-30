@@ -1,6 +1,7 @@
 import 'package:daily/feature/categories/bloc/category_bloc.dart';
 import 'package:daily/feature/categories/presentation/widgets/custom_drawer.dart';
 import 'package:daily/feature/task/presentation/widget/custom_expandable_fab.dart';
+import 'package:daily/feature/task/presentation/widget/task_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -44,7 +45,15 @@ class TasksScreen extends StatelessWidget {
             child: FloatingActionButton(
               heroTag: 'task',
               onPressed: () {
-                // Добавление задачи
+                print('tap');
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) {
+                    return TaskBottomSheet();
+                  },
+                );
               },
               elevation: 0,
               backgroundColor: Theme.of(context).colorScheme.outline,
@@ -57,9 +66,7 @@ class TasksScreen extends StatelessWidget {
             height: 50,
             child: FloatingActionButton(
               heroTag: 'category',
-              onPressed: () {
-                // Добавление категории
-              },
+              onPressed: () {},
               elevation: 0,
               backgroundColor: Theme.of(context).colorScheme.outline,
               shape: const CircleBorder(),

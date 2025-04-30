@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CustomBottomSheet extends StatefulWidget {
-  const CustomBottomSheet({super.key});
+class CategoriesBottomSheet extends StatefulWidget {
+  const CategoriesBottomSheet({super.key});
 
   @override
-  State<CustomBottomSheet> createState() => _CustomBottomSheetState();
+  State<CategoriesBottomSheet> createState() => _CategoriesBottomSheetState();
 }
 
-class _CustomBottomSheetState extends State<CustomBottomSheet> {
+class _CategoriesBottomSheetState extends State<CategoriesBottomSheet> {
   bool showOnMainScreen = false;
   Color selectedColor = colors[0];
   final TextEditingController categoryNameController = TextEditingController();
